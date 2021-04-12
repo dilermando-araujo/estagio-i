@@ -28,7 +28,7 @@ module.exports = {
                     {
                       loader: 'file-loader',
                       options: {
-                          name: './statics/[id].[ext]'
+                          name: './statics/[contenthash].[ext]'
                       }
                     }
                 ]
@@ -37,7 +37,7 @@ module.exports = {
                 test: /\.(jpe?g|gif|png|svg|woff|ttf|wav|mp3)$/, 
                 loader: 'file-loader',
                 options: {
-                    name: './statics/[id].[ext]'
+                    name: './statics/[contenthash].[ext]'
                 }
             }
         ],

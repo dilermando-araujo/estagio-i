@@ -6,10 +6,14 @@ import playerMoveSpritesheet from './../assets/player/anims/move/spritesheet.png
 import playerIdleSprite from './../assets/player/anims/idle/sprites.json';
 import playerIdleSpritesheet from './../assets/player/anims/idle/spritesheet.png';
 
+import playerFootStep from './../assets/sounds/footstep.mp3';
+
 import bookItem from './../assets/items/book.png';
 
-import assetsMap from './../assets/assets.png';
-import assetConfig from './../assets/map.json';
+import asset1 from './../assets/map/fLdKId9.jpg';
+import asset2 from './../assets/map/KMh1SLq.png';
+import mapConfig from './../assets/map/map.json';
+import MapScene from './MapScene';
 
 export default class StartScene extends Phaser.Scene {
     constructor() {
@@ -20,8 +24,12 @@ export default class StartScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('tiles', assetsMap);
-        this.load.tilemapTiledJSON('map', assetConfig);
+
+        this.load.image('asset-1', asset1);
+        this.load.image('asset-2', asset2);
+        this.load.tilemapTiledJSON('tilemap', mapConfig);
+
+        this.load.audio('player.sound.footstep', playerFootStep);
 
         this.load.image('items.book', bookItem);
 
@@ -31,10 +39,17 @@ export default class StartScene extends Phaser.Scene {
 
     create() {
 
-        this.map = this.make.tilemap({key: 'map'});
-        const tileset = this.map.addTilesetImage('assets', 'tiles');
+        this.footstep = this.sound.add('player.sound.footstep');
 
-        this.map.createLayer('Camada de Tiles 1', tileset, 0, 0);
+        this.map = this.make.tilemap({key: 'tilemap'});
+        const tileset1 = this.map.addTilesetImage('fLdKId9', 'asset-1');
+        const tileset2 = this.map.addTilesetImage('KMh1SLq', 'asset-2');
+
+        const layer1 = this.map.createLayer('floor', tileset2);
+        const layer2 = this.map.createLayer('wall', tileset1);
+
+        layer1.setScale(1);
+        layer2.setScale(1);
 
         this.player = this.physics.add.sprite(200, 300, 'player.anim.idle');
         this.player.setBounce(0.2);
@@ -59,18 +74,26 @@ export default class StartScene extends Phaser.Scene {
         this.books = this.physics.add.staticGroup();
         this.books.create(450, 250, 'items.book').setScale(1).refreshBody();
         
-        // console.log(this.books.getChildren()[0]);
-
         this.message = this.add.text(this.cameras.main.centerX, 16, 'Pressione F', { fontSize: '32px', fill: '#000' }).setOrigin(0.5);
 
         this.physics.add.overlap(this.player, this.books);
 
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.mapButton = this.input.keyboard.addKey('m');
+
+        this.cameras.main.startFollow(this.player);
     }
     update() {
+        
+        if (this.mapButton.isDown) {
+            this.scene.stop(StartScene);
+            this.scene.start(MapScene);
+        }
 
         if (this.cursors.left.isDown)
             {
+                this.footstep.play();
+
                 this.player.setVelocityX(-160);
 
                 this.player.setAngle(-180);
@@ -80,6 +103,8 @@ export default class StartScene extends Phaser.Scene {
             }
             else if (this.cursors.right.isDown)
             {
+                this.footstep.play();
+
                 this.player.setVelocityX(160);
 
                 this.player.setAngle(0);
@@ -88,6 +113,8 @@ export default class StartScene extends Phaser.Scene {
                 this.player.anims.play('player.anim.move', true);
             }
             else if (this.cursors.up.isDown) {
+                this.footstep.play();
+
                 this.player.setVelocityY(-160);
 
                 this.player.setAngle(-90);
@@ -96,6 +123,8 @@ export default class StartScene extends Phaser.Scene {
                 this.player.anims.play('player.anim.move', true);
             }
             else if (this.cursors.down.isDown) {
+                this.footstep.play();
+
                 this.player.setVelocityY(160);
 
                 this.player.setAngle(90);
@@ -105,6 +134,8 @@ export default class StartScene extends Phaser.Scene {
             }
             else
             {
+                this.footstep.stop();
+
                 this.player.setVelocityX(0);
                 this.player.setVelocityY(0);
 

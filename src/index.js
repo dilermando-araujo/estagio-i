@@ -15,6 +15,6 @@ const config = {
         }
     },
     scene: [StartScene, MapScene]
-}
+};
 
 const game = new Phaser.Game(config);

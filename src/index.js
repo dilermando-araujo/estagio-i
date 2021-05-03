@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 
 import StartScene from './scenes/StartScene';
 import MapScene from './scenes/MapScene';
+import GameOverScene from './scenes/GameOver';
+import LetterScene from './scenes/LetterScene';
 
 const config = {
     type: Phaser.AUTO,
@@ -11,10 +13,10 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: true
+            debug: false
         }
     },
-    scene: [StartScene, MapScene]
+    scene: [StartScene, MapScene, GameOverScene, LetterScene]
 };
 
 const game = new Phaser.Game(config);

@@ -16,7 +16,7 @@ import asset2 from './../assets/map/KMh1SLq.png';
 import asset3 from './../assets/map/black.jpg';
 import mapConfig from './../assets/map/map.json';
 
-import MapScene from './MapScene';
+import camera from './../assets/camera.png';
 
 export default class StartScene extends Phaser.Scene {
     constructor() {
@@ -37,6 +37,7 @@ export default class StartScene extends Phaser.Scene {
         this.load.audio('player.sound.pageCollected', [pageColledctedSong]);
 
         this.load.image('items.book', bookItem);
+        this.load.image('camera', camera);
 
         this.load.atlas('player.anim.idle', playerIdleSpritesheet, playerIdleSprite);
         this.load.atlas('player.anim.move', playerMoveSpritesheet, playerMoveSprite);
@@ -96,6 +97,8 @@ export default class StartScene extends Phaser.Scene {
             if (this.collectButton.isDown) {
                 book.destroy();
                 this.pageCollected.play();
+
+                this.scene.switch('letter-scene');
             }
         });
 
@@ -105,12 +108,48 @@ export default class StartScene extends Phaser.Scene {
         this.cameras.main.startFollow(this.player);
 
         this.physics.add.collider(this.player, this.layer2);
+
+
+        // ----
+        const positionsEnemyDecision = this.physics.add.staticGroup();
+
+        const positionsEnemyDecisionLayer = this.map.getObjectLayer('enemy-wall-decision').objects;
+        positionsEnemyDecisionLayer.forEach(obj => {
+            const item = positionsEnemyDecision.create(obj.x + 10, obj.y, '', '', false);
+            
+            item.enemyPoint = obj.name;
+        });
+        
+        this.enemy = this.physics.add.
+                        sprite(
+                            positionsEnemyDecisionLayer[0].x, 
+                            positionsEnemyDecisionLayer[0].y, 
+                            'items.book'
+                        );
+        
+        this.enemyVelocity = -100;
+        this.enemyCurrentPoint = null;
+
+        this.physics.add.overlap(this.enemy, positionsEnemyDecision, (enemy, obj) => {
+            if (this.enemyCurrentPoint === null || this.enemyCurrentPoint !== obj.enemyPoint) {
+                this.enemyCurrentPoint = obj.enemyPoint; 
+                this.enemyVelocity = this.enemyVelocity * -1;
+            }
+        });
+
+        this.physics.add.collider(this.player, this.enemy, () => {
+            this.scene.start('game-over-scene');
+        });
+
+        this.physics.add.sprite(400, 350, 'camera').setScrollFactor(0, 0);
     }
     update() {
 
+        this.enemy.setVelocityY(this.enemyVelocity);
+
         if (this.mapButton.isDown) {
-            this.scene.stop(StartScene);
-            this.scene.start(MapScene);
+            console.log("iiirii");
+            this.scene.switch("map-scene");
         }
 
         if (this.cursors.left.isDown)

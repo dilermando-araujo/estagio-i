@@ -5,6 +5,10 @@ export default class MapScene extends Phaser.Scene {
         super('map-scene');
     }
 
+    init(data) {
+        console.log(data);
+    }
+
     preload(){}
 
     create(){
@@ -14,8 +18,7 @@ export default class MapScene extends Phaser.Scene {
     update(){
 
         if (this.mapButton.isDown) {
-            this.scene.remove(MapScene);
-            this.scene.resume(StartScene);
+            this.scene.switch('game-scene');
         }
 
     }

@@ -87,9 +87,6 @@ export default class StartScene extends Phaser.Scene {
             frameRate: 24,
             repeat: -1
         });
-        
-        this.message = this.add.text(this.cameras.main.centerX, 16, 'Pressione F', { fontSize: '32px', fill: '#000' }).setOrigin(0.5);
-        this.message.setScrollFactor(0, 0);
 
         this.collectButton = this.input.keyboard.addKey('f');
 

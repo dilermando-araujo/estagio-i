@@ -20,56 +20,82 @@ export default class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        (this.sound.add('menuSong', {loop: true, volume: 2})).play();
+        this.enterButton = this.input.keyboard.addKey(13);
+
+        this.menuSound = this.sound.add('menuSong', {loop: true, volume: 2});
+        this.menuSound.play();
+
         this.soundTypewriter = this.sound.add('soundTypewriter', {loop: false});
         this.soundTypewriterNewLine = this.sound.add('soundTypewriterNewLine', {loop: false});
 
-        this.wordCount = 0;
-        this.currentWord = "";
-        this.word = TextUtil.getTextWithBreakLines('PROJETO DE REPORTAGEM', 12);
+        this.messages = [
+            'Projeto de Reportagem',
+            'Anos atrás, um hotel isolado da cidade foi palco de desaparecimentos e alguns assassinatos. Recentemente um novo caso',
+            '...'
+        ];
 
         this.message = this.add.text(0, 16, '', { fontSize: '32px', fill: '#fff' });
         this.message.setOrigin(0, 0);
 
         this.time.addEvent({
+            delay: 0,
+            callback: () => this.show(),
+            loop: false
+        });
+    }
+
+    show() {
+        this.wordCount = 0;
+        this.currentWord = '';
+        this.word = TextUtil.getTextWithBreakLines(this.messages.join(' |'), 30);
+        this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
+
+        this.wordsShow = this.time.addEvent({
             delay: 200,
             callback: () => this.write(),
             repeat: this.word.length
         });
-
     }
 
     write() {
 
-        if (this.word.charAt(this.wordCount) === '\n')
-            this.soundTypewriterNewLine.play();
-        else
-            this.soundTypewriter.play();
+        if (this.word.charAt(this.wordCount) !== '|' && this.word.length !== this.wordCount) {
+            if (this.pressEnter) this.pressEnter.destroy();
 
-        this.currentWord += this.word.charAt(this.wordCount);
-        this.wordCount++;
+            if (this.word.charAt(this.wordCount) === '\n')
+                this.soundTypewriterNewLine.play();
+            else
+                this.soundTypewriter.play();
 
-        if (this.currentWord.length === this.word.length) {
+            this.currentWord += this.word.charAt(this.wordCount);
+            this.wordCount++;
+
+            this.message.destroy();
+
+            this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
+            this.message.setOrigin(0, 0);
+            this.message.setScrollFactor(0, 0);
+
+        } else {
+            if (this.word.length !== this.wordCount) this.wordCount++;
+            this.wordsShow.paused = true;
+
             this.soundTypewriterNewLine.play();
             this.time.addEvent({
                 delay: 600,
                 callback: () => this.showPressEnter(),
                 loop: false
             });
+
         }
 
-        this.message.destroy();
-
-        this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
-        this.message.setOrigin(0, 0);
-        this.message.setScrollFactor(0, 0);
     }
 
     showPressEnter() {
         this.pressEnter = this.add.text(
             this.cameras.main.centerX, 
             550,
-            'Pressione enter para iniciar', 
+            'Pressione enter para continuar', 
             { fontSize: '32px', fill: '#fff' }
         ).setOrigin(0.5).setScrollFactor(0, 0);
 
@@ -78,6 +104,22 @@ export default class MenuScene extends Phaser.Scene {
 
     update() {
 
+        if (this.enterButton.isDown) {
+            if (this.word.length === this.wordCount) {
+                this.menuSound.stop();
+
+                this.scene.stop('main-scene');
+                this.scene.run('game-scene');
+            } else {
+                this.currentWord = '';
+    
+                this.message.destroy();
+                this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
+    
+                this.wordsShow.paused = false;
+            }
+        }
+        
     }
 
 }

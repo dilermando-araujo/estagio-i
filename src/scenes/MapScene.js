@@ -1,5 +1,3 @@
-import StartScene from "./StartScene";
-
 export default class MapScene extends Phaser.Scene {
     constructor() {
         super('map-scene');

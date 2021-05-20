@@ -12,15 +12,15 @@
  "layers":[
         {
          "chunks":[],
-         "height":64,
+         "height":0,
          "id":6,
          "name":"black",
          "opacity":1,
-         "startx":-64,
-         "starty":-32,
+         "startx":0,
+         "starty":0,
          "type":"tilelayer",
          "visible":true,
-         "width":96,
+         "width":0,
          "x":0,
          "y":0
         }, 
@@ -938,7 +938,95 @@
          "draworder":"topdown",
          "id":8,
          "name":"enemy-wall-decision",
-         "objects":[],
+         "objects":[
+                {
+                 "height":124,
+                 "id":42,
+                 "name":"decision-1",
+                 "rotation":0,
+                 "type":"d-r",
+                 "visible":true,
+                 "width":132,
+                 "x":-2324,
+                 "y":-648
+                }, 
+                {
+                 "height":124,
+                 "id":44,
+                 "name":"decision-5",
+                 "rotation":0,
+                 "type":"u-l",
+                 "visible":true,
+                 "width":132,
+                 "x":506,
+                 "y":214
+                }, 
+                {
+                 "height":124,
+                 "id":45,
+                 "name":"decision-3",
+                 "rotation":0,
+                 "type":"u-d-l",
+                 "visible":true,
+                 "width":132,
+                 "x":-2322,
+                 "y":-254
+                }, 
+                {
+                 "height":124,
+                 "id":46,
+                 "name":"decision-4",
+                 "rotation":0,
+                 "type":"r",
+                 "visible":true,
+                 "width":132,
+                 "x":-3222,
+                 "y":-254
+                }, 
+                {
+                 "height":124,
+                 "id":47,
+                 "name":"decision-2",
+                 "rotation":0,
+                 "type":"u-r",
+                 "visible":true,
+                 "width":132,
+                 "x":-2290,
+                 "y":194
+                }, 
+                {
+                 "height":124,
+                 "id":48,
+                 "name":"decision-6",
+                 "rotation":0,
+                 "type":"d-l",
+                 "visible":true,
+                 "width":132,
+                 "x":518,
+                 "y":-646
+                }, 
+                {
+                 "height":124,
+                 "id":49,
+                 "name":"decision-7",
+                 "rotation":0,
+                 "type":"u-d-r",
+                 "visible":true,
+                 "width":132,
+                 "x":518,
+                 "y":-258
+                }, 
+                {
+                 "height":124,
+                 "id":50,
+                 "name":"decision-8",
+                 "rotation":0,
+                 "type":"l",
+                 "visible":true,
+                 "width":132,
+                 "x":1410,
+                 "y":-254
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -951,15 +1039,15 @@
          "name":"letter-positions",
          "objects":[
                 {
-                 "height":90.9090909090909,
+                 "height":90.9091,
                  "id":25,
                  "name":"letter-position-1",
                  "rotation":0,
                  "type":"letter-position",
                  "visible":true,
-                 "width":96.969696969697,
+                 "width":96.9697,
                  "x":-500,
-                 "y":-396.969696969697
+                 "y":-396.97
                 }, 
                 {
                  "height":90.9091,
@@ -969,8 +1057,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-1684.84848636364,
-                 "y":24.2424196969697
+                 "x":-1684.85,
+                 "y":24.2424
                 }, 
                 {
                  "height":90.9091,
@@ -980,8 +1068,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-3254.54545606061,
-                 "y":-630.303034848485
+                 "x":-3254.55,
+                 "y":-630.303
                 }, 
                 {
                  "height":90.9091,
@@ -991,8 +1079,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":330.303028787879,
-                 "y":-175.75758030303
+                 "x":330.303,
+                 "y":-175.758
                 }, 
                 {
                  "height":90.9091,
@@ -1002,8 +1090,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":1069.69696818182,
-                 "y":-621.212125757576
+                 "x":1069.7,
+                 "y":-621.212
                 }, 
                 {
                  "height":90.9091,
@@ -1013,8 +1101,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-706.060607575758,
-                 "y":-693.939398484848
+                 "x":-706.061,
+                 "y":-693.939
                 }, 
                 {
                  "height":90.9091,
@@ -1024,8 +1112,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":69.6969681818183,
-                 "y":-1718.18182272727
+                 "x":69.697,
+                 "y":-1718.18
                 }, 
                 {
                  "height":90.9091,
@@ -1035,8 +1123,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":360.606059090909,
-                 "y":-1203.03030757576
+                 "x":360.606,
+                 "y":-1203.03
                 }, 
                 {
                  "height":90.9091,
@@ -1046,8 +1134,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-2578.78788030303,
-                 "y":-36.3636409090911
+                 "x":-2578.79,
+                 "y":-36.3636
                 }, 
                 {
                  "height":90.9091,
@@ -1057,8 +1145,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-1312.12121363636,
-                 "y":-1209.09091363636
+                 "x":-1312.12,
+                 "y":-1209.09
                 }, 
                 {
                  "height":90.9091,
@@ -1068,8 +1156,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-2069.69697121212,
-                 "y":627.272722727273
+                 "x":-2069.7,
+                 "y":627.273
                 }, 
                 {
                  "height":90.9091,
@@ -1079,8 +1167,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-912.121213636364,
-                 "y":527.272722727273
+                 "x":-912.121,
+                 "y":527.273
                 }, 
                 {
                  "height":90.9091,
@@ -1090,8 +1178,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":233.333331818182,
-                 "y":630.303025757576
+                 "x":233.333,
+                 "y":630.303
                 }, 
                 {
                  "height":90.9091,
@@ -1101,8 +1189,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":554.545453030303,
-                 "y":57.575753030303
+                 "x":554.545,
+                 "y":57.5758
                 }, 
                 {
                  "height":90.9091,
@@ -1112,8 +1200,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":827.272725757576,
-                 "y":-48.484853030303
+                 "x":827.273,
+                 "y":-48.4849
                 }, 
                 {
                  "height":90.9091,
@@ -1123,12 +1211,12 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-1909.09091060606,
-                 "y":-684.848489393939
+                 "x":-1909.09,
+                 "y":-684.848
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1155,7 +1243,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":42,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",

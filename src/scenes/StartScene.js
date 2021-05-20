@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import moment from 'moment'
 
 import playerMoveSprite from './../assets/player/anims/move/sprites.json';
 import playerMoveSpritesheet from './../assets/player/anims/move/spritesheet.png';
@@ -16,10 +17,14 @@ import asset2 from './../assets/map/KMh1SLq.png';
 import asset3 from './../assets/map/black.jpg';
 import mapConfig from './../assets/map/map.json';
 
-import camera from './../assets/camera.png';
+import flashlight from './../assets/flashlight.png'
+import black from './../assets/black.png'
 
+import TimeUtil from './../utils/TimeUtil';
 import RandomUtil from './../utils/RandomUtil';
 import LetterService from '../services/LetterService';
+
+import heartBeatingSound from '../assets/sounds/heart-beating.mp3';
 
 export default class StartScene extends Phaser.Scene {
     constructor() {
@@ -27,6 +32,31 @@ export default class StartScene extends Phaser.Scene {
 
         this.player = null;
         this.showMessage = false;
+        
+        this.state = {
+            gameStartAt: moment(),
+
+            flashlightStages: [
+                [false, TimeUtil.minutesToMill(0), () => {
+                    if (this.heartBeating.isPlaying)
+                        this.heartBeating.pause();
+                }],
+                [false, TimeUtil.minutesToMill(5), () => {
+                    if (this.heartBeating.isPlaying)
+                        this.heartBeating.pause();
+                }],
+                [false, TimeUtil.minutesToMill(8), () => {
+                    if (this.heartBeating.isPaused)
+                        this.heartBeating.resume();
+                    else
+                        this.heartBeating.play();
+                }],
+                [false, TimeUtil.minutesToMill(10), () => {
+                    this.scene.stop('game-scene');
+                    this.scene.start('game-over-scene')
+                }]
+            ]
+        };
     }
 
     preload() {
@@ -38,9 +68,11 @@ export default class StartScene extends Phaser.Scene {
 
         this.load.audio('player.sound.footstep', [playerFootStep]);
         this.load.audio('player.sound.pageCollected', [pageColledctedSong]);
+        this.load.audio('player.sound.heartBeatingSound', [heartBeatingSound]);
 
         this.load.image('items.book', bookItem);
-        this.load.image('camera', camera);
+        this.load.image('flashlight', flashlight);
+        this.load.image('black', black);
 
         this.load.atlas('player.anim.idle', playerIdleSpritesheet, playerIdleSprite);
         this.load.atlas('player.anim.move', playerMoveSpritesheet, playerMoveSprite);
@@ -49,6 +81,7 @@ export default class StartScene extends Phaser.Scene {
     create() {
         this.footstep = this.sound.add('player.sound.footstep', {loop: true});
         this.pageCollected = this.sound.add('player.sound.pageCollected', {loop: false});
+        this.heartBeating = this.sound.add('player.sound.heartBeatingSound');
 
         this.map = this.make.tilemap({key: 'tilemap'});
         const tileset1 = this.map.addTilesetImage('fLdKId9', 'asset-1');
@@ -72,7 +105,6 @@ export default class StartScene extends Phaser.Scene {
         this.player.setBounce(0.2);
         this.player.setScale(0.5);
         this.player.body.setGravityY(0);
-        // this.player.setCollideWorldBounds(true);
         
         this.anims.create({
             key: 'player.anim.idle',
@@ -99,37 +131,63 @@ export default class StartScene extends Phaser.Scene {
 
 
         // ----
-        // const positionsEnemyDecision = this.physics.add.staticGroup();
+        const positionsEnemyDecision = this.physics.add.staticGroup();
 
-        // const positionsEnemyDecisionLayer = this.map.getObjectLayer('enemy-wall-decision').objects;
-        // positionsEnemyDecisionLayer.forEach(obj => {
-        //     const item = positionsEnemyDecision.create(obj.x + 10, obj.y, '', '', false);
+        const positionsEnemyDecisionLayer = this.map.getObjectLayer('enemy-wall-decision').objects;
+        positionsEnemyDecisionLayer.forEach(obj => {
+            const item = positionsEnemyDecision.create(obj.x + 10, obj.y, '', '', false);
             
-        //     item.enemyPoint = obj.name;
-        // });
+            item.enemyPoint = obj.name;
+            item.enemyDecisionType = obj.type;
+        });
         
-        // this.enemy = this.physics.add.
-        //                 sprite(
-        //                     positionsEnemyDecisionLayer[0].x, 
-        //                     positionsEnemyDecisionLayer[0].y, 
-        //                     'items.book'
-        //                 );
+        this.enemy = this.physics.add.
+                        sprite(
+                            positionsEnemyDecisionLayer[0].x, 
+                            positionsEnemyDecisionLayer[0].y, 
+                            'items.book'
+                        );
         
-        // this.enemyVelocity = -100;
-        // this.enemyCurrentPoint = null;
+        this.enemyVelocityX = 100;
+        this.enemyVelocityY = 0;
+        this.enemyCurrentPoint = null;
 
-        // this.physics.add.overlap(this.enemy, positionsEnemyDecision, (enemy, obj) => {
-        //     if (this.enemyCurrentPoint === null || this.enemyCurrentPoint !== obj.enemyPoint) {
-        //         this.enemyCurrentPoint = obj.enemyPoint; 
-        //         this.enemyVelocity = this.enemyVelocity * -1;
-        //     }
-        // });
+        this.physics.add.overlap(this.enemy, positionsEnemyDecision, (enemy, obj) => {
+            if (this.enemyCurrentPoint === null || this.enemyCurrentPoint !== obj.enemyPoint) {
+                this.enemyCurrentPoint = obj.enemyPoint; 
 
-        // this.physics.add.collider(this.player, this.enemy, () => {
-        //     this.scene.start('game-over-scene');
-        // });
+                const options = obj.enemyDecisionType.split('-');
+                const optionSelected = options[RandomUtil.random(0, options.length - 1)];
 
-        // this.physics.add.sprite(400, 350, 'camera').setScrollFactor(0, 0);
+                if (optionSelected === 'd') {
+                    this.enemyVelocityY = 250;
+                    this.enemyVelocityX = 0;
+                }
+
+                if (optionSelected === 'u') {
+                    this.enemyVelocityY = -250;
+                    this.enemyVelocityX = 0;
+                }
+
+                if (optionSelected === 'r') {
+                    this.enemyVelocityY = 0;
+                    this.enemyVelocityX = 250;
+                }
+
+                if (optionSelected === 'l') {
+                    this.enemyVelocityY = 0;
+                    this.enemyVelocityX = -250;
+                }
+
+            }
+        });
+
+        this.physics.add.collider(this.player, this.enemy, () => {
+            this.scene.stop('game-scene');
+            this.scene.start('game-over-scene');
+        });
+
+        this.flashlight = this.physics.add.sprite(0, 0, 'flashlight').setScrollFactor(0, 0);
 
         let countLetterCollected = 0;
 
@@ -268,12 +326,56 @@ export default class StartScene extends Phaser.Scene {
         });
 
     }
+
+    setFlashlightStage(stage) {
+        if (stage === 1) {
+            this.flashlight.setScale(0.9);
+            this.flashlight.setX(378);
+            this.flashlight.setY(230);
+        }
+
+        if (stage === 2) {
+            this.flashlight.setScale(0.75);
+            this.flashlight.setX(378);
+            this.flashlight.setY(215);
+        }
+
+        if (stage === 3) {
+            this.flashlight.setScale(0.45);
+            this.flashlight.setX(378);
+            this.flashlight.setY(240);
+        }
+
+        if (stage === 4) {
+            this.flashlight.destroy();
+            this.flashlight = this.physics.add.sprite(300, 160, 'black').setScrollFactor(0, 0);
+        }
+        
+    }
+
     update() {
 
-        // this.enemy.setVelocityY(this.enemyVelocity);
+        // flashlight logic
+        for (let i in this.state.flashlightStages) {
+
+            if (this.state.flashlightStages[i][1] < moment().diff(this.state.gameStartAt)
+                && !this.state.flashlightStages[i][0]) {
+
+                this.setFlashlightStage(Number(i) + 1);
+                this.state.flashlightStages[i][0] = true;
+
+                if (typeof this.state.flashlightStages[i][2] === 'function')
+                    this.state.flashlightStages[i][2]();
+
+                break;
+            }
+            
+        }
+
+        this.enemy.setVelocityY(this.enemyVelocityY);
+        this.enemy.setVelocityX(this.enemyVelocityX);
 
         if (this.mapButton.isDown) {
-            console.log("iiirii");
             this.scene.switch("map-scene");
         }
 

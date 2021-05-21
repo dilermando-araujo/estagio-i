@@ -1029,6 +1029,149 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
+         "visible":false,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":11,
+         "name":"battery-positions",
+         "objects":[
+                {
+                 "height":80,
+                 "id":51,
+                 "name":"battery-position-1",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":1236,
+                 "y":-618
+                }, 
+                {
+                 "height":80,
+                 "id":55,
+                 "name":"battery-position-2",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":1350,
+                 "y":-620
+                }, 
+                {
+                 "height":80,
+                 "id":56,
+                 "name":"battery-position-3",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":1476,
+                 "y":-620
+                }, 
+                {
+                 "height":80,
+                 "id":57,
+                 "name":"battery-position-4",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":1492,
+                 "y":-416
+                }, 
+                {
+                 "height":80,
+                 "id":58,
+                 "name":"battery-position-5",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":818,
+                 "y":996
+                }, 
+                {
+                 "height":80,
+                 "id":59,
+                 "name":"battery-position-6",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":920,
+                 "y":998
+                }, 
+                {
+                 "height":80,
+                 "id":60,
+                 "name":"battery-position-7",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":1024,
+                 "y":1000
+                }, 
+                {
+                 "height":80,
+                 "id":61,
+                 "name":"battery-position-8",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":-822,
+                 "y":536
+                }, 
+                {
+                 "height":80,
+                 "id":62,
+                 "name":"battery-position-9",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":-1422,
+                 "y":-1202
+                }, 
+                {
+                 "height":80,
+                 "id":63,
+                 "name":"battery-position-10",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":-1298,
+                 "y":-1094
+                }, 
+                {
+                 "height":80,
+                 "id":64,
+                 "name":"battery-position-11",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":256,
+                 "y":-1196
+                }, 
+                {
+                 "height":80,
+                 "id":65,
+                 "name":"battery-position-12",
+                 "rotation":0,
+                 "type":"battery-position",
+                 "visible":true,
+                 "width":80,
+                 "x":372,
+                 "y":-1082
+                }],
+         "opacity":1,
+         "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
@@ -1167,8 +1310,8 @@
                  "type":"letter-position",
                  "visible":true,
                  "width":96.9697,
-                 "x":-912.121,
-                 "y":527.273
+                 "x":-976.121,
+                 "y":529.273
                 }, 
                 {
                  "height":90.9091,
@@ -1216,7 +1359,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1242,8 +1385,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":51,
+ "nextlayerid":12,
+ "nextobjectid":66,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",

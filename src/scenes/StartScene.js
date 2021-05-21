@@ -11,6 +11,7 @@ import playerFootStep from './../assets/sounds/footstep.mp3';
 import pageColledctedSong from './../assets/sounds/page-collected.mp3'
 
 import bookItem from './../assets/items/book.png';
+import batteryItem from './../assets/items/flashlight-battery.png';
 
 import asset1 from './../assets/map/fLdKId9.jpg';
 import asset2 from './../assets/map/KMh1SLq.png';
@@ -41,17 +42,17 @@ export default class StartScene extends Phaser.Scene {
                     if (this.heartBeating.isPlaying)
                         this.heartBeating.pause();
                 }],
-                [false, TimeUtil.minutesToMill(5), () => {
+                [false, TimeUtil.minutesToMill(1), () => {
                     if (this.heartBeating.isPlaying)
                         this.heartBeating.pause();
                 }],
-                [false, TimeUtil.minutesToMill(8), () => {
+                [false, TimeUtil.minutesToMill(2), () => {
                     if (this.heartBeating.isPaused)
                         this.heartBeating.resume();
                     else
                         this.heartBeating.play();
                 }],
-                [false, TimeUtil.minutesToMill(10), () => {
+                [false, TimeUtil.minutesToMill(3), () => {
                     this.scene.stop('game-scene');
                     this.scene.start('game-over-scene')
                 }]
@@ -71,6 +72,8 @@ export default class StartScene extends Phaser.Scene {
         this.load.audio('player.sound.heartBeatingSound', [heartBeatingSound]);
 
         this.load.image('items.book', bookItem);
+        this.load.image('items.battery', batteryItem);
+
         this.load.image('flashlight', flashlight);
         this.load.image('black', black);
 
@@ -274,6 +277,47 @@ export default class StartScene extends Phaser.Scene {
 
         window.cheats = {};
         window.cheats.lettersPositions = lettersRandomSelected;
+
+        this.batteries = this.physics.add.staticGroup();
+        const batteriesPositions = this.map.getObjectLayer('battery-positions').objects;
+
+        const batteriesPositionsSelected = []; 
+        for (let i = 0; i < 5; i++) {
+            
+            while (true) {
+                const position = RandomUtil.random(0, batteriesPositions.length - 1);
+                if (!batteriesPositionsSelected.includes(position)) {
+                    batteriesPositionsSelected.push(position);
+
+                    this.batteries.create(
+                        batteriesPositions[position].x,
+                        batteriesPositions[position].y,
+                        'items.battery'
+                    ).setAngle(
+                        RandomUtil.random(0, 360)
+                    ).setOrigin(0.5, 0.5).setScale(0.1).refreshBody();
+                    
+                    break;
+                }
+            }
+
+        }
+        window.cheats.batteryPositions = batteriesPositionsSelected;
+        window.cheats.gameState = this.state;
+
+        this.physics.add.overlap(this.player, this.batteries, (player, battery) => {
+
+            if (this.collectButton.isDown) {
+                battery.destroy();
+
+                this.state.gameStartAt.add(45, 'seconds');
+    
+                for (let i in this.state.flashlightStages) {
+                        this.state.flashlightStages[i][0] = false;
+                }
+            }
+
+        });
 
         this.books = this.physics.add.staticGroup();
         const letterPositions = LetterService.orderLetterPhaserObjectsByName(

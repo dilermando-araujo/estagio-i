@@ -220,8 +220,12 @@ export default class StartScene extends Phaser.Scene {
             const lettersMapSelected = [];
             for (let i = 0; i < 7; i++) {
     
+                let counterAttempt = 0;
                 let find = false;
                 while (!find) {
+                    counterAttempt++;
+                    if (counterAttempt > 30) break;
+
                     const position = RandomUtil.random(0, 6);
                     if (position == i) continue;
                     if (lettersMapSelected.includes(lettersRandomSelected[position])) continue;
@@ -249,6 +253,7 @@ export default class StartScene extends Phaser.Scene {
                 }
 
             }
+            if(lettersMapSelected.length < 7) continue;
 
             const getMapPositionByKey = function (key, map) {
                 for (let i = 0; i < map.length; i++) {

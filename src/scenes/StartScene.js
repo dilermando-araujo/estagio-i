@@ -105,6 +105,7 @@ export default class StartScene extends Phaser.Scene {
         this.layer3.setScale(1);
 
         const playerPositionStart = this.map.getObjectLayer('player-start-point').objects;
+        this.playerPositionStart = playerPositionStart;
 
         this.player = this.physics.add.sprite(playerPositionStart[0].x + 90, playerPositionStart[0].y + 50, 'player.anim.idle');
         this.player.setBounce(0.2);
@@ -427,7 +428,13 @@ export default class StartScene extends Phaser.Scene {
 
             this.scene.sleep('game-scene');
             this.scene.run('map-scene', {
-                letters: this.state.lettersInventory
+                letters: this.state.lettersInventory,
+                playerPosition: {
+                    initialX: this.playerPositionStart[0].x + 90,
+                    initialY: this.playerPositionStart[0].y + 50,
+                    x: this.player.x,
+                    y: this.player.y
+                }
             });
         }
 

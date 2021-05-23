@@ -1,3 +1,4 @@
+import style from './assets/css/style.css';
 import Phaser from 'phaser';
 
 import StartScene from './scenes/StartScene';
@@ -20,7 +21,8 @@ const config = {
     scene: [
         // MenuScene, 
         StartScene, 
-        MapScene, GameOverScene, 
+        MapScene, 
+        // GameOverScene, 
         LetterScene
     ]
 };

@@ -33,8 +33,10 @@ export default class StartScene extends Phaser.Scene {
 
         this.player = null;
         this.showMessage = false;
-        
+
         this.state = {
+            lettersInventory: [],
+
             gameStartAt: moment(),
 
             flashlightStages: [
@@ -348,15 +350,16 @@ export default class StartScene extends Phaser.Scene {
 
             if (this.collectButton.isDown) {
 
-                console.log(mapLetterToTip);
-                console.log(this.getMapPositionByKey(book.letterPosition, mapLetterToTip));
-                console.log(mapLetterToTip[this.getMapPositionByKey(book.letterPosition, mapLetterToTip)]);
+                // console.log(mapLetterToTip);
+                // console.log(this.getMapPositionByKey(book.letterPosition, mapLetterToTip));
+                // console.log(mapLetterToTip[this.getMapPositionByKey(book.letterPosition, mapLetterToTip)]);
                 
-                console.log(
-                    LetterService.getLetterTipByLetterId(mapLetterToTip[this.getMapPositionByKey(book.letterPosition, mapLetterToTip)][1])
-                );
+                // console.log(
+                //     LetterService.getLetterTipByLetterId(mapLetterToTip[this.getMapPositionByKey(book.letterPosition, mapLetterToTip)][1])
+                // );
                 
                 countLetterCollected++;
+                this.state.lettersInventory.push(String(book.letterPosition));
                 book.destroy();
                 this.pageCollected.play();
 
@@ -420,7 +423,12 @@ export default class StartScene extends Phaser.Scene {
         this.enemy.setVelocityX(this.enemyVelocityX);
 
         if (this.mapButton.isDown) {
-            this.scene.switch("map-scene");
+            this.pageCollected.play();
+
+            this.scene.sleep('game-scene');
+            this.scene.run('map-scene', {
+                letters: this.state.lettersInventory
+            });
         }
 
         if (this.cursors.left.isDown)

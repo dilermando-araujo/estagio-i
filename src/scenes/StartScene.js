@@ -7,6 +7,9 @@ import playerMoveSpritesheet from './../assets/player/anims/move/spritesheet.png
 import playerIdleSprite from './../assets/player/anims/idle/sprites.json';
 import playerIdleSpritesheet from './../assets/player/anims/idle/spritesheet.png';
 
+import enemyMoveSprite from './../assets/enemy/anims/move/spritesheet.json';
+import enemyMoveSpritesheet from './../assets/enemy/anims/move/spritesheet.png';
+
 import playerFootStep from './../assets/sounds/footstep.mp3';
 import pageColledctedSong from './../assets/sounds/page-collected.mp3'
 
@@ -81,6 +84,7 @@ export default class StartScene extends Phaser.Scene {
 
         this.load.atlas('player.anim.idle', playerIdleSpritesheet, playerIdleSprite);
         this.load.atlas('player.anim.move', playerMoveSpritesheet, playerMoveSprite);
+        this.load.atlas('enemy.anim.move', enemyMoveSpritesheet, enemyMoveSprite);
     }
 
     create() {
@@ -126,12 +130,17 @@ export default class StartScene extends Phaser.Scene {
             repeat: -1
         });
 
+        this.anims.create({
+            key: 'enemy.anim.move',
+            frames: this.anims.generateFrameNames('enemy.anim.move'),
+            frameRate: 8,
+            repeat: -1
+        });
+
         this.collectButton = this.input.keyboard.addKey('f');
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.mapButton = this.input.keyboard.addKey('m');
-
-        this.cameras.main.startFollow(this.player);
 
         this.physics.add.collider(this.player, this.layer2);
 
@@ -149,21 +158,41 @@ export default class StartScene extends Phaser.Scene {
         
         this.enemy = this.physics.add.
                         sprite(
-                            positionsEnemyDecisionLayer[0].x, 
+                            positionsEnemyDecisionLayer[0].x + 10, 
                             positionsEnemyDecisionLayer[0].y, 
-                            'items.book'
+                            'enemy.anim.move'
                         );
-        
-        this.enemyVelocityX = 100;
+        this.enemy.anims.play('enemy.anim.move');
+
+        this.enemyVelocityX = 0;
         this.enemyVelocityY = 0;
         this.enemyCurrentPoint = null;
+        this.enemyLastChoiche = null;
 
         this.physics.add.overlap(this.enemy, positionsEnemyDecision, (enemy, obj) => {
-            if (this.enemyCurrentPoint === null || this.enemyCurrentPoint !== obj.enemyPoint) {
+
+            if (
+                (this.enemyCurrentPoint === null || this.enemyCurrentPoint !== obj.enemyPoint) &&
+                (
+                    obj.getCenter().x > enemy.getCenter().x - 4.2 && obj.getCenter().x < enemy.getCenter().x + 4.2 &&
+                    obj.getCenter().y > enemy.getCenter().y - 4.2 && obj.getCenter().y < enemy.getCenter().y + 4.2
+                )
+            ) {
                 this.enemyCurrentPoint = obj.enemyPoint; 
 
                 const options = obj.enemyDecisionType.split('-');
-                const optionSelected = options[RandomUtil.random(0, options.length - 1)];
+                let optionSelected = null;
+
+                while (true) {
+                    optionSelected = options[RandomUtil.random(0, options.length - 1)];
+
+                    if (this.enemyLastChoiche === null || options.length === 1) break;
+
+                    if (!(this.enemyLastChoiche === 'l' && optionSelected === 'r')) break;
+                    if (!(this.enemyLastChoiche === 'u' && optionSelected === 'd')) break;
+                    if (!(this.enemyLastChoiche === 'r' && optionSelected === 'l')) break;
+                    if (!(this.enemyLastChoiche === 'd' && optionSelected === 'u')) break;
+                }
 
                 if (optionSelected === 'd') {
                     this.enemyVelocityY = 250;
@@ -185,6 +214,7 @@ export default class StartScene extends Phaser.Scene {
                     this.enemyVelocityX = -250;
                 }
 
+                this.enemyLastChoiche = optionSelected;
             }
         });
 
@@ -378,6 +408,7 @@ export default class StartScene extends Phaser.Scene {
             }
         });
 
+        this.cameras.main.startFollow(this.enemy);
     }
 
     setFlashlightStage(stage) {
@@ -425,9 +456,31 @@ export default class StartScene extends Phaser.Scene {
             
         }
 
+        // enemy move logic
         this.enemy.setVelocityY(this.enemyVelocityY);
         this.enemy.setVelocityX(this.enemyVelocityX);
 
+        if (this.enemyVelocityY < 0) {
+            this.enemy.setAngle(0);
+            this.enemy.setOrigin(0.5, 0.5);
+        }
+
+        if (this.enemyVelocityY > 0) {
+            this.enemy.setAngle(180);
+            this.enemy.setOrigin(0.5, 0.5);
+        }
+
+        if (this.enemyVelocityX > 0) {
+            this.enemy.setAngle(90);
+            this.enemy.setOrigin(0.5, 0.5);
+        }
+        
+        if (this.enemyVelocityX < 0) {
+            this.enemy.setAngle(-90);
+            this.enemy.setOrigin(0.5, 0.5);
+        }
+
+        // collect items logic
         if (this.mapButton.isDown) {
             this.pageCollected.play();
 
@@ -443,6 +496,7 @@ export default class StartScene extends Phaser.Scene {
             });
         }
 
+        // player move logic
         if (this.cursors.left.isDown)
             {
                 if (!this.footstep.isPlaying)

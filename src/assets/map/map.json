@@ -1227,7 +1227,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1414,7 +1414,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1436,12 +1436,34 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":13,
+         "name":"player-finish-point",
+         "objects":[
+                {
+                 "height":45.67,
+                 "id":80,
+                 "name":"player-finish-point",
+                 "rotation":0,
+                 "type":"player-finish-point",
+                 "visible":true,
+                 "width":188,
+                 "x":-958.67,
+                 "y":1016
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }],
- "nextlayerid":12,
- "nextobjectid":78,
+ "nextlayerid":14,
+ "nextobjectid":82,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",

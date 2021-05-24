@@ -408,7 +408,32 @@ export default class StartScene extends Phaser.Scene {
             }
         });
 
-        this.cameras.main.startFollow(this.enemy);
+        // victory game logic
+        const victoryPointLayer = this.map.getObjectLayer('player-finish-point').objects;
+        const victoryPoint = this.physics.add.staticGroup();
+
+        const victoryPointObj = victoryPoint.create(
+            victoryPointLayer[0].x + victoryPointLayer[0].width / 2, 
+            victoryPointLayer[0].y + victoryPointLayer[0].height / 2, 
+            '', '', false
+        );
+        victoryPointObj.setSize(victoryPointLayer[0].width, victoryPointLayer[0].height);
+
+        this.physics.add.collider(this.player, victoryPoint, () => {
+
+            if (this.footstep.isPlaying)
+                this.footstep.stop();
+
+            if (countLetterCollected === 7) {
+                this.scene.stop('game-scene');
+                this.scene.run('victory-scene', {
+                    letters: this.state.lettersInventory,
+                });
+            }
+
+        });
+
+        this.cameras.main.startFollow(this.player);
     }
 
     setFlashlightStage(stage) {

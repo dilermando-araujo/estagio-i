@@ -1,11 +1,13 @@
 import style from './assets/css/style.css';
+
 import Phaser from 'phaser';
 
+import MenuScene from './scenes/MenuScrene';
 import StartScene from './scenes/StartScene';
 import MapScene from './scenes/MapScene';
 import GameOverScene from './scenes/GameOver';
 import LetterScene from './scenes/LetterScene';
-import MenuScene from './scenes/MenuScrene';
+import VictoryScene from './scenes/VictoryScene';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,15 +17,16 @@ const config = {
         default: 'arcade',
         arcade: {
             gravity: { y: 0 },
-            debug: true
+            debug: false
         }
     },
     scene: [
         // MenuScene, 
         StartScene, 
         MapScene, 
-        // GameOverScene, 
-        LetterScene
+        GameOverScene, 
+        LetterScene,
+        VictoryScene
     ]
 };
 

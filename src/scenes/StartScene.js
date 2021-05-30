@@ -36,11 +36,16 @@ export default class StartScene extends Phaser.Scene {
 
         this.player = null;
         this.showMessage = false;
+        this.state = {};
+    }
 
+    preload() {
         this.state = {
             lettersInventory: [],
 
+            realGameStartAt: moment(),
             gameStartAt: moment(),
+            gameOver: false,
 
             flashlightStages: [
                 [false, TimeUtil.minutesToMill(0), () => {
@@ -58,15 +63,18 @@ export default class StartScene extends Phaser.Scene {
                         this.heartBeating.play();
                 }],
                 [false, TimeUtil.minutesToMill(3), () => {
+                    this.state.gameOver = true;
+
+                    if (this.footstep.isPlaying) {
+                        this.footstep.stop();
+                    }
+
                     this.scene.stop('game-scene');
                     this.scene.start('game-over-scene')
                 }]
             ]
         };
-    }
-
-    preload() {
-
+        
         this.load.image('asset-1', asset1);
         this.load.image('asset-2', asset2);
         this.load.image('asset-3', asset3);
@@ -219,6 +227,12 @@ export default class StartScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(this.player, this.enemy, () => {
+            this.state.gameOver = true;
+
+            if (this.footstep.isPlaying) {
+                this.footstep.stop();
+            }
+
             this.scene.stop('game-scene');
             this.scene.start('game-over-scene');
         });
@@ -421,13 +435,17 @@ export default class StartScene extends Phaser.Scene {
 
         this.physics.add.collider(this.player, victoryPoint, () => {
 
-            if (this.footstep.isPlaying)
-                this.footstep.stop();
-
             if (countLetterCollected === 7) {
+                this.state.gameOver = true;
+
+                if (this.footstep.isPlaying) {
+                    this.footstep.stop();
+                }
+
                 this.scene.stop('game-scene');
                 this.scene.run('victory-scene', {
                     letters: this.state.lettersInventory,
+                    gameStartAt: this.state.realGameStartAt
                 });
             }
 
@@ -524,7 +542,7 @@ export default class StartScene extends Phaser.Scene {
         // player move logic
         if (this.cursors.left.isDown)
             {
-                if (!this.footstep.isPlaying)
+                if (!this.footstep.isPlaying && !this.state.gameOver)
                     this.footstep.play();
 
                 this.player.setVelocityX(-160);
@@ -536,7 +554,7 @@ export default class StartScene extends Phaser.Scene {
             }
             else if (this.cursors.right.isDown)
             {
-                if (!this.footstep.isPlaying)
+                if (!this.footstep.isPlaying && !this.state.gameOver)
                     this.footstep.play();
 
                 this.player.setVelocityX(160);
@@ -547,7 +565,7 @@ export default class StartScene extends Phaser.Scene {
                 this.player.anims.play('player.anim.move', true);
             }
             else if (this.cursors.up.isDown) {
-                if (!this.footstep.isPlaying)
+                if (!this.footstep.isPlaying && !this.state.gameOver)
                     this.footstep.play();
 
                 this.player.setVelocityY(-160);
@@ -558,7 +576,7 @@ export default class StartScene extends Phaser.Scene {
                 this.player.anims.play('player.anim.move', true);
             }
             else if (this.cursors.down.isDown) {
-                if (!this.footstep.isPlaying)
+                if (!this.footstep.isPlaying && !this.state.gameOver)
                     this.footstep.play();
 
                 this.player.setVelocityY(160);

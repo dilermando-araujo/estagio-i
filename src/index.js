@@ -21,11 +21,11 @@ const config = {
         }
     },
     scene: [
-        // MenuScene, 
+        MenuScene, 
         StartScene, 
         MapScene, 
-        GameOverScene, 
         LetterScene,
+        GameOverScene, 
         VictoryScene
     ]
 };

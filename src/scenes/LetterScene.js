@@ -10,7 +10,7 @@ export default class LetterScene extends Phaser.Scene {
 
     preload(){}
     
-    create(){
+    create() {
         this.message = this.add.text(this.cameras.main.centerX, 50, `PÁGINA ${this.props.countLetterCollected}/7`, { fontSize: '32px', fill: '#FFF' }).setOrigin(0.5);
         this.message.setScrollFactor(0, 0);
 
@@ -38,15 +38,18 @@ export default class LetterScene extends Phaser.Scene {
             positionAccum += 35;
         }
 
-        this.backCursor = this.input.keyboard.addKey('f');
-    }
+        const keys = ['f', 'esc'];
+        if (typeof this.props.keyUsed === 'string') keys.push(this.props.keyUsed);
 
-    update(){
+        this.backCursor = this.input.keyboard.addKeys(keys.join(','));
 
-        if (this.backCursor.isDown) {
-            this.scene.stop('letter-scene');
-            this.scene.wake('game-scene');
+        for (let i in this.backCursor) {
+            this.backCursor[i].on('down', () => {
+                this.scene.stop('letter-scene');
+                this.scene.wake('game-scene');
+            });
         }
-
     }
+
+    update(){}
 }

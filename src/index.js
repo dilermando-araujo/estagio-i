@@ -21,7 +21,7 @@ const config = {
         }
     },
     scene: [
-        MenuScene, 
+        // MenuScene, 
         StartScene, 
         MapScene, 
         LetterScene,

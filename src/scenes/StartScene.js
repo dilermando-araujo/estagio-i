@@ -452,6 +452,28 @@ export default class StartScene extends Phaser.Scene {
         });
 
         this.cameras.main.startFollow(this.player);
+
+
+        // logic letter inventory
+        this.letterInventoryKeys = this.input.keyboard.addKeys("ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN");
+        let count = 0;
+        for (let i in this.letterInventoryKeys) {
+            const keyPosition = count;
+            count++;
+
+            this.letterInventoryKeys[i].on('down', () => {
+                if (this.state.lettersInventory[keyPosition]) {
+                    this.pageCollected.play();
+
+                    this.scene.sleep('game-scene');
+                    this.scene.run('letter-scene', {
+                        countLetterCollected: Number(keyPosition) + 1, 
+                        letterMessage: LetterService.getLetterTipByLetterId(mapLetterToTip[this.getMapPositionByKey(Number(this.state.lettersInventory[keyPosition]), mapLetterToTip)][1]),
+                        keyUsed: i
+                    });
+                }
+            });
+        }
     }
 
     setFlashlightStage(stage) {

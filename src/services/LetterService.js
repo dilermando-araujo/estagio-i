@@ -4,7 +4,7 @@ export default class LetterService {
         const tips = [
             '',
             'Gosto muito de dançar e ouvir músicas, mas tenho medo de um rapaz que fica lá',
-            'Ainda estou procurando uma folha que caiu, acho que perdi quando fui no quarto IV',
+            'Ainda estou procurando uma folha que caiu, acho que perdi quando fui no quarto VI',
             'Conheci esse lugar por meio de uma amiga, ela trabalha aqui faz um ano, mas ela sumiu recentemente',
             'Acho que o banheiro é o único lugar que estou me sentindo segura',
             'Um louco no armazém queria arrancar meu diário a força para ler minhas coisas, que ódio',

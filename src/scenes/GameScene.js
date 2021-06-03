@@ -1,13 +1,13 @@
 import Phaser from 'phaser';
 import moment from 'moment'
 
-import playerMoveSprite from './../assets/player/anims/move/sprites.json';
+import playerMoveSprite from '../assets/player/anims/move/sprites.json';
 import playerMoveSpritesheet from './../assets/player/anims/move/spritesheet.png';
 
-import playerIdleSprite from './../assets/player/anims/idle/sprites.json';
+import playerIdleSprite from '../assets/player/anims/idle/sprites.json';
 import playerIdleSpritesheet from './../assets/player/anims/idle/spritesheet.png';
 
-import enemyMoveSprite from './../assets/enemy/anims/move/spritesheet.json';
+import enemyMoveSprite from '../assets/enemy/anims/move/spritesheet.json';
 import enemyMoveSpritesheet from './../assets/enemy/anims/move/spritesheet.png';
 
 import playerFootStep from './../assets/sounds/footstep.mp3';
@@ -19,18 +19,18 @@ import batteryItem from './../assets/items/flashlight-battery.png';
 import asset1 from './../assets/map/fLdKId9.jpg';
 import asset2 from './../assets/map/KMh1SLq.png';
 import asset3 from './../assets/map/black.jpg';
-import mapConfig from './../assets/map/map.json';
+import mapConfig from '../assets/map/map.json';
 
 import flashlight from './../assets/flashlight.png'
 import black from './../assets/black.png'
 
-import TimeUtil from './../utils/TimeUtil';
-import RandomUtil from './../utils/RandomUtil';
+import TimeUtil from '../utils/TimeUtil';
+import RandomUtil from '../utils/RandomUtil';
 import LetterService from '../services/LetterService';
 
 import heartBeatingSound from '../assets/sounds/heart-beating.mp3';
 
-export default class StartScene extends Phaser.Scene {
+export default class GameScene extends Phaser.Scene {
     constructor() {
         super('game-scene');
 
@@ -60,7 +60,9 @@ export default class StartScene extends Phaser.Scene {
                     if (this.heartBeating.isPaused)
                         this.heartBeating.resume();
                     else
-                        this.heartBeating.play();
+                        this.heartBeating.play({
+                            loop: true
+                        });
                 }],
                 [false, TimeUtil.minutesToMill(3), () => {
                     this.state.gameOver = true;
@@ -503,6 +505,8 @@ export default class StartScene extends Phaser.Scene {
     }
 
     update() {
+
+        // console.log(Phaser.Math.Distance.BetweenPoints(this.player, this.enemy));
 
         // flashlight logic
         for (let i in this.state.flashlightStages) {

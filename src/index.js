@@ -3,7 +3,7 @@ import style from './assets/css/style.css';
 import Phaser from 'phaser';
 
 import MenuScene from './scenes/MenuScrene';
-import StartScene from './scenes/StartScene';
+import GameScene from './scenes/GameScene';
 import MapScene from './scenes/MapScene';
 import GameOverScene from './scenes/GameOver';
 import LetterScene from './scenes/LetterScene';
@@ -21,8 +21,8 @@ const config = {
         }
     },
     scene: [
-        // MenuScene, 
-        StartScene, 
+        MenuScene, 
+        GameScene, 
         MapScene, 
         LetterScene,
         GameOverScene, 

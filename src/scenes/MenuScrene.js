@@ -13,6 +13,7 @@ export default class MenuScene extends Phaser.Scene {
         super('main-scene');
 
         this.state = {
+            showSkipInto: true,
             startStory: false
         };
     }
@@ -26,6 +27,7 @@ export default class MenuScene extends Phaser.Scene {
 
     create() {
         this.enterButton = this.input.keyboard.addKey(13);
+        this.skipButton = this.input.keyboard.addKey('P');
 
         this.menuSound = this.sound.add('menuSong', {loop: true, volume: 2});
         this.menuSound.play();
@@ -35,7 +37,10 @@ export default class MenuScene extends Phaser.Scene {
 
         this.messages = [
             'Projeto de Reportagem',
-            'Anos atrás, um hotel isolado da cidade foi palco de desaparecimentos e alguns assassinatos. Recentemente um novo caso',
+            'Desde o começo do mês, um hotel localizado a caminho da zona rural tem sido palco de misteriosos desaparecimentos, os quais até agora não tiveram solução. Porém, hoje uma nova peça nesse mistério foi encontrada, viajantes que estavam indo em direção a um sítio afirmaram ter encontrado um diário junto a dois corpos em um rio, próximo ao hotel.',
+            'É notável que o diário possui páginas faltando, e que talvez essas páginas expliquem melhor o que aconteceu dias antes dos desaparecimentos, e até mesmo, quem são os corpos que estavam no rio.',
+            'A fim de ser a primeira emissora a noticiar os principais acontecimentos sobre esse caso, um reportér resolve ir sozinho documentar o local antes da chegada da polícia.',
+            'Sobre o jogo: \n - Utilize F para coletar os itens e sair de alguma tela. \n - É noite, não deixe sua lanterna ficar sem pilhas! \n - Encontre as sete páginas que estão faltando no diário e saia do local. Leia com atenção cada uma delas, pois elas dão dicas para as próximas, para ler novamente uma página, utilize a tecla correspondente ao seu número. \n - Utilize M para acessar o mapa.',
             '...'
         ];
 
@@ -52,7 +57,7 @@ export default class MenuScene extends Phaser.Scene {
     show() {
         this.wordCount = 0;
         this.currentWord = '';
-        this.word = TextUtil.getTextWithBreakLines(this.messages.join(' |'), 30);
+        this.word = TextUtil.getTextWithBreakLines(this.messages.join(' |'), 40);
         this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
 
         this.wordsShow = this.time.addEvent({
@@ -67,6 +72,7 @@ export default class MenuScene extends Phaser.Scene {
         if (this.word.charAt(this.wordCount) !== '|' && this.word.length !== this.wordCount) {
             if (this.state.startStory) this.wordsShow.delay = 50;
             if (this.pressEnter) this.pressEnter.destroy();
+            if (this.showSkipInto) this.showSkipInto.destroy();
 
             if (this.word.charAt(this.wordCount) === '\n')
                 this.soundTypewriterNewLine.play();
@@ -99,17 +105,36 @@ export default class MenuScene extends Phaser.Scene {
     }
 
     showPressEnter() {
+        if (this.state.showSkipInto) {
+
+            this.showSkipInto = this.add.text(
+                this.cameras.main.centerX, 
+                550,
+                'Pressione P para pular a abertura', 
+                { fontSize: '32px', fill: '#fff' }
+            ).setOrigin(0.5).setScrollFactor(0, 0);
+
+        }
+
         this.pressEnter = this.add.text(
             this.cameras.main.centerX, 
-            550,
+            this.state.showSkipInto ? 500 : 550,
             'Pressione enter para continuar', 
             { fontSize: '32px', fill: '#fff' }
         ).setOrigin(0.5).setScrollFactor(0, 0);
 
         TweenUtil.flashElement(this, this.pressEnter);
+        if (this.state.showSkipInto) TweenUtil.flashElement(this, this.showSkipInto);
     }
 
     update() {
+
+        if (this.skipButton.isDown && this.state.showSkipInto) {
+            this.menuSound.stop();
+
+            this.scene.stop('main-scene');
+            this.scene.run('game-scene');
+        }
 
         if (this.enterButton.isDown) {
             if (this.word.length === this.wordCount) {
@@ -124,7 +149,9 @@ export default class MenuScene extends Phaser.Scene {
                 this.message = this.add.text(10, 16, this.currentWord, { fontSize: '32px', fill: '#fff' });
     
                 this.wordsShow.paused = false;
+
                 this.state.startStory = true;
+                this.state.showSkipInto = false;
             }
         }
         

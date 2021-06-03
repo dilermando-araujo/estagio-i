@@ -20,7 +20,7 @@ export default class GameOverScene extends Phaser.Scene {
         this.pressEnter = this.add.text(
             this.cameras.main.centerX, 
             550,
-            'Pressione enter para continuar', 
+            'Pressione enter para tentar novamente', 
             { fontSize: '32px', fill: '#fff' }
         ).setOrigin(0.5).setScrollFactor(0, 0);
 

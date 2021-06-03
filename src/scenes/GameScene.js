@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import moment from 'moment'
+import moment from 'moment';
 
 import playerMoveSprite from '../assets/player/anims/move/sprites.json';
 import playerMoveSpritesheet from './../assets/player/anims/move/spritesheet.png';
@@ -69,6 +69,10 @@ export default class GameScene extends Phaser.Scene {
 
                     if (this.footstep.isPlaying) {
                         this.footstep.stop();
+                    }
+
+                    if (this.heartBeating.isPlaying) {
+                        this.heartBeating.stop();
                     }
 
                     this.scene.stop('game-scene');
@@ -444,6 +448,10 @@ export default class GameScene extends Phaser.Scene {
                     this.footstep.stop();
                 }
 
+                if (this.heartBeating.isPlaying) {
+                    this.heartBeating.stop();
+                }
+
                 this.scene.stop('game-scene');
                 this.scene.run('victory-scene', {
                     letters: this.state.lettersInventory,
@@ -454,7 +462,6 @@ export default class GameScene extends Phaser.Scene {
         });
 
         this.cameras.main.startFollow(this.player);
-
 
         // logic letter inventory
         this.letterInventoryKeys = this.input.keyboard.addKeys("ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN");

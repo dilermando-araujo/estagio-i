@@ -47,6 +47,14 @@ export default class GameScene extends Phaser.Scene {
             gameStartAt: moment(),
             gameOver: false,
 
+            currentEnemySoundStage: -1,
+            enemyDistanceSound: [
+                [false, 450 + (3 * (925 - 450) / 3), 0.25],
+                [false, 450 + (2 * (925 - 450) / 3), 0.50],
+                [false, 450 + (1 * (925 - 450) / 3), 0.75],
+                [false, 450 + (0 * (925 - 450) / 3), 1]
+            ],
+
             flashlightStages: [
                 [false, TimeUtil.minutesToMill(0), () => {
                     if (this.heartBeating.isPlaying)
@@ -69,6 +77,10 @@ export default class GameScene extends Phaser.Scene {
 
                     if (this.footstep.isPlaying) {
                         this.footstep.stop();
+                    }
+
+                    if (this.enemyFootstep.isPlaying) {
+                        this.enemyFootstep.stop();
                     }
 
                     if (this.heartBeating.isPlaying) {
@@ -103,6 +115,7 @@ export default class GameScene extends Phaser.Scene {
 
     create() {
         this.footstep = this.sound.add('player.sound.footstep', {loop: true});
+        this.enemyFootstep = this.sound.add('player.sound.footstep', {loop: true});
         this.pageCollected = this.sound.add('player.sound.pageCollected', {loop: false});
         this.heartBeating = this.sound.add('player.sound.heartBeatingSound');
 
@@ -237,6 +250,10 @@ export default class GameScene extends Phaser.Scene {
 
             if (this.footstep.isPlaying) {
                 this.footstep.stop();
+            }
+
+            if (this.enemyFootstep.isPlaying) {
+                this.enemyFootstep.stop();
             }
 
             this.scene.stop('game-scene');
@@ -448,6 +465,10 @@ export default class GameScene extends Phaser.Scene {
                     this.footstep.stop();
                 }
 
+                if (this.enemyFootstep.isPlaying) {
+                    this.enemyFootstep.stop();
+                }
+
                 if (this.heartBeating.isPlaying) {
                     this.heartBeating.stop();
                 }
@@ -483,6 +504,54 @@ export default class GameScene extends Phaser.Scene {
                 }
             });
         }
+
+        // add area collider enemy sound.
+        const enemyCenter = this.enemy.getCenter();
+        const enemySoundArea = this.physics.add.sprite(enemyCenter.x, enemyCenter.y, '', '');
+
+        this.enemySoundArea = enemySoundArea;
+
+        enemySoundArea.setSize(2000, 2000);
+        enemySoundArea.setVisible(false);
+
+        this.physics.add.overlap(this.player, enemySoundArea, () => {
+            const enemyDistance = Phaser.Math.Distance.BetweenPoints(this.player, this.enemy);
+
+            if (enemyDistance > this.state.enemyDistanceSound[0][1]) {
+                if (this.enemyFootstep.isPlaying) this.enemyFootstep.stop();
+
+                this.state.currentEnemySoundStage = -1;
+                // for (let i in this.state.enemyDistanceSound) this.state.enemyDistanceSound[i][0] = false;
+            } else {
+
+                for (let i in this.state.enemyDistanceSound) {
+                    if (enemyDistance < this.state.enemyDistanceSound[i][1] && 
+                        !this.state.enemyDistanceSound[i][0] &&
+                        !this.nextIsLess( 
+                            (this.state.enemyDistanceSound[Number(i) + 1] || [0, -1])[1],
+                            enemyDistance
+                        )
+                    ) {
+                        if (this.enemyFootstep.isPlaying) this.enemyFootstep.stop();
+
+                        this.state.currentEnemySoundStage = i;
+                        console.log(this.state.enemyDistanceSound[i][2]);
+
+                        this.enemyFootstep.play({
+                            volume: this.state.enemyDistanceSound[i][2]
+                        });
+
+                        this.state.enemyDistanceSound[i][0] = true;
+                    } else if (this.state.currentEnemySoundStage != i) {
+                        this.state.enemyDistanceSound[i][0] = false;
+                    }
+
+                }
+
+            }
+
+        });
+
     }
 
     setFlashlightStage(stage) {
@@ -511,9 +580,13 @@ export default class GameScene extends Phaser.Scene {
         
     }
 
-    update() {
+    nextIsLess(current, next) {
+        if (next < current) return true;
 
-        // console.log(Phaser.Math.Distance.BetweenPoints(this.player, this.enemy));
+        return false;
+    }
+
+    update() {
 
         // flashlight logic
         for (let i in this.state.flashlightStages) {
@@ -535,6 +608,9 @@ export default class GameScene extends Phaser.Scene {
         // enemy move logic
         this.enemy.setVelocityY(this.enemyVelocityY);
         this.enemy.setVelocityX(this.enemyVelocityX);
+        
+        this.enemySoundArea.setVelocityY(this.enemyVelocityY);
+        this.enemySoundArea.setVelocityX(this.enemyVelocityX);
 
         if (this.enemyVelocityY < 0) {
             this.enemy.setAngle(0);

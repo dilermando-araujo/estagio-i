@@ -11,7 +11,6 @@ export default class TextUtil {
             ) {
                 sentence += ' ' + words[i];
             } else {
-                console.log(sentence);
                 sentences.push(sentence);
                 sentence = words[i];
             }

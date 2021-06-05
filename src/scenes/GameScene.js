@@ -11,7 +11,8 @@ import enemyMoveSprite from '../assets/enemy/anims/move/spritesheet.json';
 import enemyMoveSpritesheet from './../assets/enemy/anims/move/spritesheet.png';
 
 import playerFootStep from './../assets/sounds/footstep.mp3';
-import pageColledctedSong from './../assets/sounds/page-collected.mp3'
+import playerBreathingSound from './../assets/sounds/breathing.mp3';
+import pageColledctedSong from './../assets/sounds/page-collected.mp3';
 
 import bookItem from './../assets/items/book.png';
 import batteryItem from './../assets/items/flashlight-battery.png';
@@ -46,6 +47,9 @@ export default class GameScene extends Phaser.Scene {
             realGameStartAt: moment(),
             gameStartAt: moment(),
             gameOver: false,
+
+            playerStopAt: null,
+            randomStartBreathingAfter: null,
 
             currentEnemySoundStage: -1,
             enemyDistanceSound: [
@@ -99,6 +103,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('tilemap', mapConfig);
 
         this.load.audio('player.sound.footstep', [playerFootStep]);
+        this.load.audio('player.sound.breathing', [playerBreathingSound]);
         this.load.audio('player.sound.pageCollected', [pageColledctedSong]);
         this.load.audio('player.sound.heartBeatingSound', [heartBeatingSound]);
 
@@ -114,6 +119,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
+        this.playerBreathingSound = this.sound.add('player.sound.breathing');
         this.footstep = this.sound.add('player.sound.footstep', {loop: true});
         this.enemyFootstep = this.sound.add('player.sound.footstep', {loop: true});
         this.pageCollected = this.sound.add('player.sound.pageCollected', {loop: false});
@@ -254,6 +260,10 @@ export default class GameScene extends Phaser.Scene {
 
             if (this.enemyFootstep.isPlaying) {
                 this.enemyFootstep.stop();
+            }
+
+            if (this.heartBeating.isPlaying) {
+                this.heartBeating.stop();
             }
 
             this.scene.stop('game-scene');
@@ -660,6 +670,8 @@ export default class GameScene extends Phaser.Scene {
                 this.player.setOrigin(0.5, 0.5);
 
                 this.player.anims.play('player.anim.move', true);
+
+                this.state.playerStopAt = null;
             }
             else if (this.cursors.right.isDown)
             {
@@ -672,6 +684,8 @@ export default class GameScene extends Phaser.Scene {
                 this.player.setOrigin(0.5, 0.5);
 
                 this.player.anims.play('player.anim.move', true);
+
+                this.state.playerStopAt = null;
             }
             else if (this.cursors.up.isDown) {
                 if (!this.footstep.isPlaying && !this.state.gameOver)
@@ -683,6 +697,8 @@ export default class GameScene extends Phaser.Scene {
                 this.player.setOrigin(0.5, 0.5);
 
                 this.player.anims.play('player.anim.move', true);
+
+                this.state.playerStopAt = null;
             }
             else if (this.cursors.down.isDown) {
                 if (!this.footstep.isPlaying && !this.state.gameOver)
@@ -694,11 +710,28 @@ export default class GameScene extends Phaser.Scene {
                 this.player.setOrigin(0.5, 0.5);
 
                 this.player.anims.play('player.anim.move', true);
+
+                this.state.playerStopAt = null;
             }
             else
             {
                 if (this.footstep.isPlaying)
                     this.footstep.stop();
+
+                if (this.state.playerStopAt === null) {
+
+                    this.state.playerStopAt = moment();
+                    this.state.randomStartBreathingAfter = RandomUtil.random(8, 25);
+
+                } else {
+                    if (
+                        moment().unix() - this.state.playerStopAt.unix() >= 
+                        this.state.randomStartBreathingAfter
+                    ) {
+                        this.playerBreathingSound.play();    
+                        this.state.playerStopAt = null;
+                    }
+                }
 
                 this.player.setVelocityX(0);
                 this.player.setVelocityY(0);

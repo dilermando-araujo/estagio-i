@@ -39,7 +39,7 @@ export default class MenuScene extends Phaser.Scene {
             'Projeto de Reportagem',
             'Desde o começo do mês, um hotel localizado a caminho da zona rural tem sido palco de misteriosos desaparecimentos, os quais até agora não tiveram solução. Porém, hoje uma nova peça nesse mistério foi encontrada, viajantes que estavam indo em direção a um sítio afirmaram ter encontrado um diário junto a dois corpos em um rio, próximo ao hotel.',
             'É notável que o diário possui páginas faltando, e que talvez essas páginas expliquem melhor o que aconteceu dias antes dos desaparecimentos, e até mesmo, quem são os corpos que estavam no rio.',
-            'A fim de ser a primeira emissora a noticiar os principais acontecimentos sobre esse caso, um reportér resolve ir sozinho documentar o local antes da chegada da polícia.',
+            'A fim de ser a primeira emissora a noticiar os principais acontecimentos sobre esse caso, um repórter resolve ir sozinho documentar o local antes da chegada da polícia.',
             'Sobre o jogo: \n - Utilize F para coletar os itens e sair de alguma tela. \n - É noite, não deixe sua lanterna ficar sem pilhas! \n - Encontre as sete páginas que estão faltando no diário e saia do local. Leia com atenção cada uma delas, pois elas dão dicas para as próximas, para ler novamente uma página, utilize a tecla correspondente ao seu número. \n - Utilize M para acessar o mapa.',
             '...'
         ];
